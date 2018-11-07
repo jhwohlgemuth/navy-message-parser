@@ -5,6 +5,7 @@ rust:
   - nightly
 before_script:
   - cargo install just
+  - rustup component add rustfmt-preview
   - rustup component add clippy-preview
 script:
   - just test
