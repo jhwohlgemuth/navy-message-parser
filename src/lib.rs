@@ -7,7 +7,8 @@ use std::io::prelude::*;
 pub fn open(filename: &str) -> String {
     let mut f = File::open(filename).expect("File not found");
     let mut contents = String::new();
-    f.read_to_string(&mut contents).expect("Something went wrong reading the file");
+    f.read_to_string(&mut contents)
+        .expect("Something went wrong reading the file");
     contents
 }
 #[test]
@@ -19,7 +20,7 @@ fn get_classification(contents: &str) -> &str {
     named!(x<&str, &str>, take_until!("//"));
     match x(contents) {
         Ok(i) => i.1,
-        Err(_) => "UNKNOWN"
+        Err(_) => "UNKNOWN",
     }
 }
 #[test]
