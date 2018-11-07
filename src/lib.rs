@@ -34,3 +34,27 @@ fn can_get_classification() {
                     ";
     assert_eq!(get_classification(contents), "UNCLASSIFIED");
 }
+
+pub struct Header<'a> {
+    pub classification: &'a str,
+    // pub datetime:  &'a str,
+    // pub from: &'a str,
+    // pub to: &'a str,
+    // pub info: &'a str,
+}
+pub fn get_header(contents: &str) -> Header {
+    Header {
+        classification: get_classification(contents),
+    }
+}
+#[test]
+fn can_get_header_classification() {
+    let contents = "UNCLASSIFIED//
+                    ROUTINE
+                    R 291453Z OCT 18
+                    FM CNO WASHINGTON DC
+                    TO NAVADMIN
+                    INFO CNO WASHINGTON DC
+                    ";
+    assert_eq!(get_header(contents).classification, "UNCLASSIFIED");
+}
