@@ -14,12 +14,6 @@ pub fn open(filename: &str) -> String {
         .expect("Something went wrong reading the file");
     contents
 }
-fn get_classification(contents: &str) -> &str {
-    match take_until_break(contents) {
-        Ok(i) => i.1,
-        Err(_) => "UNKNOWN",
-    }
-}
 pub struct Header<'a> {
     pub classification: &'a str,
     // pub datetime:  &'a str,
@@ -29,7 +23,10 @@ pub struct Header<'a> {
 }
 pub fn get_header(contents: &str) -> Header {
     Header {
-        classification: get_classification(contents),
+        classification: match take_until_break(contents) {
+            Ok(i) => i.1,
+            Err(_) => "UNKNOWN",
+        },
     }
 }
 pub fn get_subject(contents: &str) -> &str {
@@ -49,17 +46,6 @@ mod tests {
     #[test]
     fn can_open_files() {
         assert_eq!(open("data/foo.txt"), "foo\n");
-    }
-    #[test]
-    fn can_get_classification() {
-        let contents = "UNCLASSIFIED//
-                    ROUTINE
-                    R 291453Z OCT 18
-                    FM CNO WASHINGTON DC
-                    TO NAVADMIN
-                    INFO CNO WASHINGTON DC
-                    ";
-        assert_eq!(get_classification(contents), "UNCLASSIFIED");
     }
     #[test]
     fn can_get_header_classification() {
@@ -97,5 +83,24 @@ mod tests {
             subject,
             "FISCAL YEAR 2019 CYBERSECURITY AWARENESS CHALLENGE"
         );
+    }
+    #[test]
+    fn can_handle_missing_subject() {
+        let content = "UNCLASSIFIED//
+                   ROUTINE
+                   R 221554Z OCT 18
+                   FM CNO WASHINGTON DC
+                   TO NAVADMIN
+                   INFO CNO WASHINGTON DC
+                   BT
+                   UNCLAS
+                   PASS TO OFFICE CODES:
+                   FM CNO WASHINGTON DC//N2N6//
+                   INFO CNO WASHINGTON DC//N2N6//
+   
+                   NAVADMIN 256/18
+                   ";
+        let subject = get_subject(&content);
+        assert_eq!(subject, "UNKNOWN");
     }
 }
