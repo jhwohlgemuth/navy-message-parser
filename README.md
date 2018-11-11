@@ -10,6 +10,7 @@ Development
 **Installation**
 - Install rust
 - Install [just](https://github.com/casey/just) command runner: ```cargo install just```
+- Install toolchain dependencies: ```just setup```
 
 **Run tests**
 - ```just test```
