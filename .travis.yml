@@ -1,4 +1,3 @@
-
 sudo: required
 dist: trusty
 language: rust
@@ -20,11 +19,11 @@ before_cache: |
   fi
 cache: cargo
 before_script:
-  - cargo install just
-  - rustup component add rustfmt-preview
   - rustup component add clippy-preview
 script:
-  - just test
+  - cargo build
+  - cargo clippy
+  - cargo test
 after_success: |
   if [[ "$TRAVIS_RUST_VERSION" == nightly ]]; then
     cargo tarpaulin --out Xml
