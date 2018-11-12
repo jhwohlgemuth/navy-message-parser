@@ -31,12 +31,14 @@ pub fn get_header(contents: &str) -> Header {
 }
 pub fn get_subject(contents: &str) -> &str {
     named!(parse<&str, &str>, do_parse!(
-        take_until_subj >>
+        take_until!("SUBJ") >>
+        tag!("SUBJ") >>
+        ws!(alt!(tag!("/") | tag!(":"))) >>
         subject: take_until_break >>
         (subject)
     ));
     match parse(contents) {
-        Ok(i) => &i.1[5..],
+        Ok(i) => &i.1,
         Err(_) => "UNKNOWN",
     }
 }
