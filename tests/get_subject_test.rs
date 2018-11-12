@@ -65,3 +65,20 @@ fn can_get_message_subject() {
         "FY-20 NAVY ACTIVE DUTY AND RESERVE ENLISTED ADVANCEMENT SELECTION BOARDS \nFOR MASTER CHIEF AND SENIOR CHIEF PETTY OFFICER"
     );
 }
+#[test]
+fn can_handle_bad_subject() {
+    // SUBJ:
+    let nav16135 = open("data/NAVADMIN/NAV16135.txt");
+    let subject16135 = get_subject(&nav16135);
+    assert_eq!(
+        subject16135,
+        "MASTER CHIEF PETTY OFFICER OF THE NAVY SELECTION"
+    );
+}
+#[test]
+fn can_handle_personal_for_message() {
+    // subject line missing "//"
+    let nav16180 = open("data/NAVADMIN/NAV16180.txt");
+    let subject16180 = get_subject(&nav16180);
+    assert_eq!(subject16180, "UNKNOWN");
+}
